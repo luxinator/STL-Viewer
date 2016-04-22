@@ -30,14 +30,18 @@ class renderer {
     const GLuint id;
     const GLuint vertexdepth;
 
+    float objectColor[3];
+
     float boundingBox[6];
+
+
 
 public:
 
-    renderer(unsigned int renderNr, unsigned int vertexDepth = 3);
+    renderer(unsigned int id, float objectColorR = 1.0f, float objectColorG = 0.5f, float objectColorB = 0.31f, unsigned int vertexDepth = 3, const char * vertexPath = "shaders/vertex.glsl", const char * fragmentPath = "shaders/fragment.glsl");
     void loadTriangles(std::vector<triangle *> triangles);
     void update();
-    void draw();
+    void draw(glm::mat4 transform, float lightingColor[3]);
 
     ~renderer();
 

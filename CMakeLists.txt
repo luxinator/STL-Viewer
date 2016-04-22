@@ -7,7 +7,7 @@ project(STLViewer)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -g")
 
 
-set(SOURCE_FILES main.cpp STLData.cpp STLData.h window_GL.cpp window_GL.h renderer.cpp renderer.h)
+set(SOURCE_FILES main.cpp STLData.cpp STLData.h window_GL.cpp window_GL.h renderer.cpp renderer.h Camera.h GLError.cpp GLError.h)
 
 add_executable(STLViewer ${SOURCE_FILES})
 
@@ -17,6 +17,10 @@ add_subdirectory("lib/glfw/")
 add_subdirectory("lib/glm")
 
 #include_directories("lib/glm/glm")
+
+add_custom_command(TARGET STLViewer PRE_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${CMAKE_SOURCE_DIR}/shaders $<TARGET_FILE_DIR:STLViewer>/shaders)
 
 find_package(GLEW REQUIRED)
 if (GLEW_FOUND)

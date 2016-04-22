@@ -34,8 +34,6 @@ int main(int argc, char * argv[]) {
     }
 
     STLData * stlData = new STLData(filename.c_str(), binary);
-//    stlData->saveToFile("test.stl", false);
-//   stlData->~STLData();
 
     window_GL *Window_GL = new window_GL(1280, 720, "STLViewer");
 
@@ -49,6 +47,6 @@ int main(int argc, char * argv[]) {
 
     delete Window_GL;
 
-
+    delete stlData;
 
 }

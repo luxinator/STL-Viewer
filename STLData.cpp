@@ -23,9 +23,6 @@
 inline float bytesToFloat(const char * bytes, size_t start) {
 
     float val;
-//    std::copy(reinterpret_cast<const char *>(&bytes[0 + start]),
-//              reinterpret_cast<const char *>(&bytes[4 + start]),
-//              reinterpret_cast<char *>(&val));
     memcpy(&val, bytes + start, sizeof val);
     return val;
 }
@@ -66,6 +63,7 @@ STLData::STLData(const char *filename, bool binary) {
         if (!stlFile) {
             fprintf(stderr, "STLData: Error opening file: [%s]\n", filename);
             fprintf(stderr, "%s\n", strerror(errno));
+            std::abort();
             return;
         }
 
@@ -156,6 +154,7 @@ STLData::STLData(const char *filename, bool binary) {
         if (!stlFile) {
             fprintf(stderr, "STLData: Error opening file: [%s]\n", filename);
             fprintf(stderr, "%s\n", strerror(errno));
+            std::abort();
             return;
         }
 
@@ -168,6 +167,7 @@ STLData::STLData(const char *filename, bool binary) {
         stlFile.read(header, 80);
 
         printf("--- HEADER ---:\n %s\n", header);
+        this->name = std::string(header);
 
         char * byteHolder_32 = new char[4];
         stlFile.read(byteHolder_32, 4);
@@ -184,6 +184,9 @@ STLData::STLData(const char *filename, bool binary) {
             tData.push_back(t);
 
         }
+        delete[] header;
+        delete[] byteHolder_32;
+        delete[] buffer;
     }
     printf("STLData: Loaded STL:\n");
     this->printInfo();
@@ -204,7 +207,6 @@ STLData::~STLData() {
         delete tData[i];
         tData[i] = nullptr;
     }
-    tData.~vector();
 
 }
 

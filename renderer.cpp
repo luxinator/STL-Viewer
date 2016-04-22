@@ -3,23 +3,15 @@
 //
 
 #include "renderer.h"
+#include "Camera.h"
+#include "GLError.h"
 
+#include <fstream>
+#include <sstream>
+#include <iostream>
 
-//Shaders:
-const GLchar *vertexShaderSrc = "#version 330 core\n"
-        "layout (location = 0) in vec3 position;\n"
-        "void main()\n"
-        "{\n"
-        "gl_Position = vec4(position.x, position.y, position.z, 1.0);\n"
-        "}\0";
-
-const GLchar *fragmentShaderSrc = "#version 330 core\n"
-        "out vec4 color;\n"
-        "void main()\n"
-        "{\n"
-        "color = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
-        "}\n\0";
-
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 /*
  * UTILITY FUNCTIONS:
@@ -73,10 +65,43 @@ bool checkShaderLink(GLuint shaderProgram) {
 }
 
 
-renderer::renderer(unsigned int id, unsigned int vertexDepth) : id(id), vertexdepth(vertexDepth) {
+renderer::renderer(unsigned int id, float objectColorR, float objectColorG, float objectColorB, unsigned int vertexDepth, const char * vertexPath, const char * fragmentPath) : id(id), vertexdepth(vertexDepth) {
+
+    // --------- Read shaders Sources
+    printf("Building Renderer\n");
+
+    // 1. Retrieve the vertex/fragment source code from filePath
+    std::string vertexCode;
+    std::string fragmentCode;
+    std::ifstream vShaderFile;
+    std::ifstream fShaderFile;
+    // ensures ifstream objects can throw exceptions:
+    vShaderFile.exceptions(std::ifstream::badbit);
+    fShaderFile.exceptions(std::ifstream::badbit);
+    try {
+        // Open files
+        vShaderFile.open(vertexPath);
+        fShaderFile.open(fragmentPath);
+        std::stringstream vShaderStream, fShaderStream;
+        // Read file's buffer contents into streams
+        vShaderStream << vShaderFile.rdbuf();
+        fShaderStream << fShaderFile.rdbuf();
+        // close file handlers
+        vShaderFile.close();
+        fShaderFile.close();
+        // Convert stream into string
+        vertexCode = vShaderStream.str();
+        fragmentCode = fShaderStream.str();
+    }
+    catch (std::ifstream::failure e) {
+        std::cout << "ERROR::SHADER::FILE_NOT_SUCCESFULLY_READ" << std::endl;
+        std::abort();
+    }
+
+    const GLchar *vertexShaderSrc = vertexCode.c_str();
+    const GLchar *fragmentShaderSrc = fragmentCode.c_str();
 
     // ---------- Shaders:
-
     //Load the Vertex Shader, i.e. the vertex transformations
     GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
     glShaderSource(vertexShader, 1, &vertexShaderSrc, NULL);
@@ -117,23 +142,44 @@ renderer::renderer(unsigned int id, unsigned int vertexDepth) : id(id), vertexde
         boundingBox[i] = 0.0f;
     }
 
+    check_gl_error();
+
+    this->objectColor[0] = objectColorR;
+    this->objectColor[1] = objectColorG;
+    this->objectColor[2] = objectColorB;
 
     printf("Renderer: Created Succesfully\n");
 
 }
 
-void renderer::draw() {
+void renderer::draw(glm::mat4 transform, float lightingColor[3]) {
 
     if (!VBO || !VAO || !shaderProgram || !vertices) {
         fprintf(stderr, "Renderer: Something went wrong!!!\n");
+        fprintf(stderr, "VBO: %i\nVAO: %i\nshaderProgram: %i\nvertices: %p\n", VBO,VAO, shaderProgram, vertices);
         std::abort();
     }
     glUseProgram(shaderProgram);
     glBindVertexArray(VAO);
+
+    //Pass the transformation from the window, ie zoom, location of camera etc.
+    GLint transform_vrt = glGetUniformLocation(shaderProgram, "transform_vrt");
+    glUniformMatrix4fv(transform_vrt, 1, GL_FALSE, glm::value_ptr(transform));
+
+    //Pass the transformation from the window, ie zoom, location of camera etc.
+    GLint lightColor = glGetUniformLocation(shaderProgram, "lightColor");
+    glUniform3f(lightColor, lightingColor[0],lightingColor[1],lightingColor[2]);
+
+    //Pass the transformation from the window, ie zoom, location of camera etc.
+    GLint objColor = glGetUniformLocation(shaderProgram, "objectColor");
+    glUniform3f(objColor, objectColor[0],objectColor[1],objectColor[2]);
+
+
     glDrawArrays(GL_TRIANGLES, 0, nrOfVertices);
 
     //Free the bind to the Vertex, now no one can access it and thus fuck it up!
     glBindVertexArray(0);
+    check_gl_error();
 
 }
 
@@ -157,7 +203,7 @@ void renderer::update() {
 
     glBindVertexArray(0);
 
-    printf("Renderer: Wrote data %f kB to GPU\n", (float) (3 * sizeof(GLfloat) * (float) nrOfVertices) / 1000);
+    printf("Renderer: Wrote %.0f kB of data to GPU\n", (float) (3 * sizeof(GLfloat) * (float) nrOfVertices) / 1000);
 
 }
 
@@ -170,6 +216,8 @@ void renderer::loadTriangles(std::vector<triangle *> triangles) {
     //We need three cooirdinates per vertex
     this->vertices = new GLfloat[3 * nrOfVertices];
 
+    //SO yes, we could have done strcpy... BUT we don;t know the aliasing rules
+    //So play it safe:
     for (GLsizei i = 0; i < (GLsizei) triangles.size(); i++) {
         triangle *t = triangles[i];
 
@@ -199,7 +247,7 @@ void renderer::loadTriangles(std::vector<triangle *> triangles) {
 
 
     printf("Renderer: Loaded Vertices [%i]\n", nrOfVertices);
-    printf("\tMin\t\t\tMax\n");
+    printf("\tMin\t\t\t\tMax\n");
     printf("x\t%f\t\t%f\n", boundingBox[0], boundingBox[1]);
     printf("y\t%f\t\t%f\n", boundingBox[2], boundingBox[3]);
     printf("z\t%f\t\t%f\n", boundingBox[4], boundingBox[5]);
