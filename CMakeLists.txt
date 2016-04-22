@@ -16,8 +16,6 @@ else(GLFW_FOUND)
             INSTALL_COMMAND ""
             UPDATE_COMMAND ""
     )
-
-
 endif(GLFW_FOUND)
 
 
@@ -34,8 +32,17 @@ else(GLM_FOUND)
 
 endif(GLM_FOUND)
 
-find_package(GLEW REQUIRED)
+find_package(GLEW)
 if (GLEW_FOUND)
+    include_directories(${GLEW_INCLUDE_DIRS})
+    link_libraries(${GLEW_LIBRARIES})
+else(GLEW_FOUND)
+    ExternalProject_Add(
+            GLEW
+            GIT_REPOSITORY "https://github.com/nigels-com/glew.git"
+            INSTALL_COMMAND ""
+            UPDATE_COMMAND ""
+    )
     include_directories(${GLEW_INCLUDE_DIRS})
     link_libraries(${GLEW_LIBRARIES})
 endif()
