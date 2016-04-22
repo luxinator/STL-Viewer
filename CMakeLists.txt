@@ -25,7 +25,8 @@ else(GLFW_FOUND)
 endif(GLFW_FOUND)
 
 
-pkg_search_module(GLM glm)
+#pkg_search_module(GLM glm)
+find_package(glm)
 if(GLM_FOUND)
     include_directories(${GLM_INLUDE_DIRS})
 else(GLM_FOUND)

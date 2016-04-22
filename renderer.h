@@ -13,8 +13,8 @@
 //GL Headers
 //!!! KEEP IN THIS ORDER !!!:
 #include <GL/glew.h>
-#include "GLFW/glfw3.h"
-#include "glm/glm.hpp"
+#include <GLFW/glfw3.h>
+#include <glm/glm.hpp>
 
 
 
@@ -38,10 +38,10 @@ class renderer {
 
 public:
 
-    renderer(unsigned int id, float objectColorR = 1.0f, float objectColorG = 0.5f, float objectColorB = 0.31f, unsigned int vertexDepth = 3, const char * vertexPath = "shaders/vertex.glsl", const char * fragmentPath = "shaders/fragment.glsl");
+    renderer(unsigned int id, float objectColorR = 1.0f, float objectColorG = 0.5f, float objectColorB = 0.31f, unsigned int vertexDepth = 6, const char * vertexPath = "shaders/vertex.glsl", const char * fragmentPath = "shaders/fragment.glsl");
     void loadTriangles(std::vector<triangle *> triangles);
     void update();
-    void draw(glm::mat4 transform, float lightingColor[3]);
+    void draw(glm::mat4 transform, float lightingColor[3], glm::vec3 lightPos);
 
     ~renderer();
 

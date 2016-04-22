@@ -104,8 +104,9 @@ void window_GL::loop(){
 
         projection = projection * view;
 
+
         for(size_t i = 0; i < renderers.size(); i++){
-            renderers[i]->draw(projection, lightColor);
+            renderers[i]->draw(projection, lightColor,camera->Position);
         }
 
         glfwSwapBuffers(window);

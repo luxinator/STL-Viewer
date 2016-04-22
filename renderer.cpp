@@ -152,7 +152,7 @@ renderer::renderer(unsigned int id, float objectColorR, float objectColorG, floa
 
 }
 
-void renderer::draw(glm::mat4 transform, float lightingColor[3]) {
+void renderer::draw(glm::mat4 transform, float lightingColor[3], glm::vec3 lightPos) {
 
     if (!VBO || !VAO || !shaderProgram || !vertices) {
         fprintf(stderr, "Renderer: Something went wrong!!!\n");
@@ -166,13 +166,18 @@ void renderer::draw(glm::mat4 transform, float lightingColor[3]) {
     GLint transform_vrt = glGetUniformLocation(shaderProgram, "transform_vrt");
     glUniformMatrix4fv(transform_vrt, 1, GL_FALSE, glm::value_ptr(transform));
 
-    //Pass the transformation from the window, ie zoom, location of camera etc.
+    //Pass the LightColor
     GLint lightColor = glGetUniformLocation(shaderProgram, "lightColor");
     glUniform3f(lightColor, lightingColor[0],lightingColor[1],lightingColor[2]);
 
-    //Pass the transformation from the window, ie zoom, location of camera etc.
+    //Pass the ObjectColor
     GLint objColor = glGetUniformLocation(shaderProgram, "objectColor");
     glUniform3f(objColor, objectColor[0],objectColor[1],objectColor[2]);
+
+    //Pass the LightLocation
+    GLint lightLoc = glGetUniformLocation(shaderProgram, "lightPos");
+    glUniform3f(lightLoc, lightPos.x,lightPos.y,lightPos.z);
+
 
 
     glDrawArrays(GL_TRIANGLES, 0, nrOfVertices);
@@ -198,12 +203,12 @@ void renderer::update() {
     glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * nrOfVertices * vertexdepth, vertices, GL_STATIC_DRAW);
 
     //Tell openGL how to read our Vertices:
-    glVertexAttribPointer(id, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid *) 0);
+    glVertexAttribPointer(id, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid *) 0);
     glEnableVertexAttribArray(id);
 
     glBindVertexArray(0);
 
-    printf("Renderer: Wrote %.0f kB of data to GPU\n", (float) (3 * sizeof(GLfloat) * (float) nrOfVertices) / 1000);
+    printf("Renderer: Wrote %.0f kB of data to GPU\n", (float) (6 * sizeof(GLfloat) * (float) nrOfVertices) / 1000);
 
 }
 
@@ -213,26 +218,36 @@ void renderer::loadTriangles(std::vector<triangle *> triangles) {
     //We need three points(vertices) per triangle
     this->nrOfVertices = (GLsizei) triangles.size() * 3;
 
-    //We need three cooirdinates per vertex
-    this->vertices = new GLfloat[3 * nrOfVertices];
+    //We need three cooirdinates per vertex and a normal
+    this->vertices = new GLfloat[6 * nrOfVertices];
 
-    //SO yes, we could have done strcpy... BUT we don;t know the aliasing rules
-    //So play it safe:
     for (GLsizei i = 0; i < (GLsizei) triangles.size(); i++) {
         triangle *t = triangles[i];
 
-        GLsizei j = i * 9;
+        GLsizei j = i * 18;
         this->vertices[j] = t->v1[0];
         this->vertices[j + 1] = t->v1[1];
         this->vertices[j + 2] = t->v1[2];
 
-        this->vertices[j + 3] = t->v2[0];
-        this->vertices[j + 4] = t->v2[1];
-        this->vertices[j + 5] = t->v2[2];
+        this->vertices[j + 3] = t->ni;
+        this->vertices[j + 4] = t->nj;
+        this->vertices[j + 5] = t->nk;
 
-        this->vertices[j + 6] = t->v3[0];
-        this->vertices[j + 7] = t->v3[1];
-        this->vertices[j + 8] = t->v3[2];
+        this->vertices[j + 6] = t->v2[0];
+        this->vertices[j + 7] = t->v2[1];
+        this->vertices[j + 8] = t->v2[2];
+
+        this->vertices[j + 9] = t->ni;
+        this->vertices[j + 10] = t->nj;
+        this->vertices[j + 11] = t->nk;
+
+        this->vertices[j + 12] = t->v3[0];
+        this->vertices[j + 13] = t->v3[1];
+        this->vertices[j + 14] = t->v3[2];
+
+        this->vertices[j + 15] = t->ni;
+        this->vertices[j + 16] = t->nj;
+        this->vertices[j + 17] = t->nk;
 
     }
 

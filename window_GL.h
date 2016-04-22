@@ -10,8 +10,8 @@
 //GL Headers
 //!!! KEEP IN THIS ORDER !!!:
 #include <GL/glew.h>
-#include "GLFW/glfw3.h"
-#include "glm/glm.hpp"
+#include <GLFW/glfw3.h>
+#include <glm/glm.hpp>
 
 #include "renderer.h"
 #include "Camera.h"
