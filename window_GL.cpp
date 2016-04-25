@@ -57,6 +57,7 @@ window_GL::window_GL(const int width, const int height, const char *title) :widt
         return;
     }
     glViewport(0, 0, width, height);
+    glEnable(GL_DEPTH_TEST);
 
     // Get a Camera:
     camera = new Camera(glm::vec3(0.0f,0.0f,1.0f));
@@ -79,10 +80,9 @@ window_GL::window_GL(const int width, const int height, const char *title) :widt
 
 }
 
-void window_GL::loop(){
+void window_GL::loop() {
 
-    while(!glfwWindowShouldClose(window))
-    {
+    while (!glfwWindowShouldClose(window)) {
         GLfloat currentFrame = glfwGetTime();
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
@@ -93,29 +93,28 @@ void window_GL::loop(){
 
         // Render
         // Clear the colorbuffer
-        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
+        glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         // Create camera transformation
         glm::mat4 view;
         view = camera->GetViewMatrix();
         glm::mat4 projection;
-        projection = glm::perspective(camera->Zoom, (float)width/(float)height, 0.1f, 1000.0f);
+        projection = glm::perspective(camera->Zoom, (float) width / (float) height, 0.1f, 1000.0f);
 
         projection = projection * view;
 
 
-        for(size_t i = 0; i < renderers.size(); i++){
-            renderers[i]->draw(projection, lightColor,camera->Position);
+        for (size_t i = 0; i < renderers.size(); i++) {
+            renderers[i]->draw(projection, lightColor, camera->Position);
         }
 
         glfwSwapBuffers(window);
 
-        if(polygon == GL_TRUE){
-            glPolygonMode( GL_FRONT_AND_BACK, GL_LINE);
-        } else
-        {
-            glPolygonMode( GL_FRONT_AND_BACK, GL_FILL);
+        if (polygon == GL_TRUE) {
+            glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+        } else {
+            glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
         }
     }
 }

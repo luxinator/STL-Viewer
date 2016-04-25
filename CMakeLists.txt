@@ -27,9 +27,9 @@ endif(GLFW_FOUND)
 
 #pkg_search_module(GLM glm)
 find_package(glm)
-if(GLM_FOUND)
+if(glm_FOUND)
     include_directories(${GLM_INLUDE_DIRS})
-else(GLM_FOUND)
+else(glm_FOUND)
     ExternalProject_Add(
             GLM
             GIT_REPOSITORY "https://github.com/g-truc/glm"
@@ -40,7 +40,7 @@ else(GLM_FOUND)
             CMAKE_ARGS ${EXTERNAL_CMAKE_ARGS}
     )
     include_directories(${EXTERNAL_INSTALL_DIR}/include/glm)
-endif(GLM_FOUND)
+endif(glm_FOUND)
 
 find_package(GLEW REQUIRED)
 include_directories(${GLEW_INCLUDE_DIRS})

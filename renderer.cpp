@@ -156,7 +156,7 @@ void renderer::draw(glm::mat4 transform, float lightingColor[3], glm::vec3 light
 
     if (!VBO || !VAO || !shaderProgram || !vertices) {
         fprintf(stderr, "Renderer: Something went wrong!!!\n");
-        fprintf(stderr, "VBO: %i\nVAO: %i\nshaderProgram: %i\nvertices: %p\n", VBO,VAO, shaderProgram, vertices);
+        fprintf(stderr, "VBO: %i\nVAO: %i\nshaderProgram: %i\nvertices: %p\n", VBO, VAO, shaderProgram, vertices);
         std::abort();
     }
     glUseProgram(shaderProgram);
@@ -168,16 +168,15 @@ void renderer::draw(glm::mat4 transform, float lightingColor[3], glm::vec3 light
 
     //Pass the LightColor
     GLint lightColor = glGetUniformLocation(shaderProgram, "lightColor");
-    glUniform3f(lightColor, lightingColor[0],lightingColor[1],lightingColor[2]);
+    glUniform3f(lightColor, lightingColor[0], lightingColor[1], lightingColor[2]);
 
     //Pass the ObjectColor
     GLint objColor = glGetUniformLocation(shaderProgram, "objectColor");
-    glUniform3f(objColor, objectColor[0],objectColor[1],objectColor[2]);
+    glUniform3f(objColor, objectColor[0], objectColor[1], objectColor[2]);
 
     //Pass the LightLocation
     GLint lightLoc = glGetUniformLocation(shaderProgram, "lightPos");
-    glUniform3f(lightLoc, lightPos.x,lightPos.y,lightPos.z);
-
+    glUniform3f(lightLoc, lightPos.x, lightPos.y, lightPos.z);
 
 
     glDrawArrays(GL_TRIANGLES, 0, nrOfVertices);
@@ -185,7 +184,6 @@ void renderer::draw(glm::mat4 transform, float lightingColor[3], glm::vec3 light
     //Free the bind to the Vertex, now no one can access it and thus fuck it up!
     glBindVertexArray(0);
     check_gl_error();
-
 }
 
 void renderer::update() {
@@ -205,6 +203,9 @@ void renderer::update() {
     //Tell openGL how to read our Vertices:
     glVertexAttribPointer(id, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid *) 0);
     glEnableVertexAttribArray(id);
+
+    glVertexAttribPointer(id + 1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid *) (3 * sizeof(GLfloat)));
+    glEnableVertexAttribArray(id + 1);
 
     glBindVertexArray(0);
 
@@ -248,7 +249,6 @@ void renderer::loadTriangles(std::vector<triangle *> triangles) {
         this->vertices[j + 15] = t->ni;
         this->vertices[j + 16] = t->nj;
         this->vertices[j + 17] = t->nk;
-
     }
 
     boundingBox[0] = findMin(vertices, nrOfVertices, 0, 3);
@@ -267,7 +267,6 @@ void renderer::loadTriangles(std::vector<triangle *> triangles) {
     printf("y\t%f\t\t%f\n", boundingBox[2], boundingBox[3]);
     printf("z\t%f\t\t%f\n", boundingBox[4], boundingBox[5]);
     this->update();
-
 
 }
 
