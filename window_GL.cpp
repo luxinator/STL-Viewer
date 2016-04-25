@@ -18,6 +18,7 @@ GLfloat deltaTime = 0.0f;
 GLfloat lastFrame = 0.0f;
 
 GLboolean polygon;
+bool inverseLight;
 
 //Prototypes
 void Do_Movement();
@@ -70,6 +71,7 @@ window_GL::window_GL(const int width, const int height, const char *title) :widt
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 
     polygon = GL_FALSE;
+    inverseLight = false;
 
     lightColor[0] = 1.0f;
     lightColor[1] = 1.0f;
@@ -106,7 +108,10 @@ void window_GL::loop() {
 
 
         for (size_t i = 0; i < renderers.size(); i++) {
-            renderers[i]->draw(projection, lightColor, camera->Position);
+            if(inverseLight)
+                renderers[i]->draw(projection, lightColor, -1.0f * camera->Position);
+            else
+                renderers[i]->draw(projection, lightColor, camera->Position);
         }
 
         glfwSwapBuffers(window);
@@ -156,6 +161,12 @@ void Do_Movement() {
             polygon = GL_FALSE;
         else
             polygon = GL_TRUE;
+    }
+    if (keys[GLFW_KEY_I]) {
+        if(inverseLight)
+            inverseLight = false;
+        else
+            inverseLight = true;
     }
 }
 

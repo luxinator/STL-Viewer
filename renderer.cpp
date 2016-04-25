@@ -178,13 +178,13 @@ void renderer::draw(glm::mat4 transform, float lightingColor[3], glm::vec3 light
     GLint lightLoc = glGetUniformLocation(shaderProgram, "lightPos");
     glUniform3f(lightLoc, lightPos.x, lightPos.y, lightPos.z);
 
-
     glDrawArrays(GL_TRIANGLES, 0, nrOfVertices);
 
     //Free the bind to the Vertex, now no one can access it and thus fuck it up!
     glBindVertexArray(0);
     check_gl_error();
 }
+
 
 void renderer::update() {
 
