@@ -7,8 +7,13 @@
 
 using namespace std;
 
+
 std::string filename = "input.stl";
+std::string saveName = "";
 bool binary = false;
+bool save = false;
+bool saveBin = false;
+
 
 void display_usage(){
     printf("PLACEHOLDERTEXT\n");
@@ -30,6 +35,15 @@ int main(int argc, char * argv[]) {
             else if (s.compare(0, 2, "-b") == 0) {
                 binary = true;
             }
+            else if (s.compare(0, 2, "-s") == 0) {
+                save = true;
+                saveName = std::string(argv[i + 1]);
+            }
+            else if (s.compare(0, 2, "-S") == 0) {
+                save = true;
+                saveBin = true;
+                saveName = std::string(argv[i + 1]);
+            }
         }
     }
 
@@ -46,6 +60,10 @@ int main(int argc, char * argv[]) {
     Window_GL->loop();
 
     delete Window_GL;
+
+    if(save) {
+        stlData->saveToFile(saveName.c_str(), saveBin);
+    }
 
     delete stlData;
 

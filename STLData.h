@@ -12,6 +12,7 @@
 struct triangle{
     float ni, nj, nk;
     float v1[3], v2[3], v3[3];
+    uint16_t attributeByte = 0;
 };
 
 class STLData {

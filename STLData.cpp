@@ -219,16 +219,19 @@ void STLData::printInfo() {
 int STLData::saveToFile(const char *filename, bool binary) {
 
     int nrWritten = 0;
+    printf("Opening File %s\n", filename);
 
-    std::FILE *stlFile = fopen(filename, "w");
-
-    if (!stlFile) {
-        fprintf(stderr, "STLData: Error opening file: [%s]\n", filename);
-        fprintf(stderr, "%s\n", strerror(errno));
-        return -1;
-    }
     if (!binary) {
 
+        std::FILE *stlFile = fopen(filename, "w");
+
+        if (!stlFile) {
+            fprintf(stderr, "STLData: Error opening file: [%s]\n", filename);
+            fprintf(stderr, "%s\n", strerror(errno));
+            return -1;
+        }
+
+        printf("Writing...\n");
         fprintf(stlFile, "solid %s\n", name.c_str());
 
         for (size_t i = 0; i < tData.size(); i++) {
@@ -246,9 +249,47 @@ int STLData::saveToFile(const char *filename, bool binary) {
         fprintf(stlFile, "endsolid %s", name.c_str());
 
     } else {
-        fprintf(stderr, "STLData: Binary Saving not supported yet!\n");
+
+        std::FILE *stlFile = fopen(filename, "wb");
+
+        if (!stlFile) {
+            fprintf(stderr, "STLData: Error opening file: [%s]\n", filename);
+            fprintf(stderr, "%s\n", strerror(errno));
+            return -1;
+        }
+
+        printf("Writing...\n");
+        //Assuming a char is 8-bit wide (one word)
+        char ASCIIBuff[80];
+        memset(&ASCIIBuff, 0, 80);
+        memcpy(&ASCIIBuff, this->name.c_str(), this->name.size());
+
+        uint32_t size = (uint32_t) tData.size();
+
+        fwrite(ASCIIBuff, sizeof(char), 80, stlFile);
+        fwrite(&size, sizeof(uint32_t), 1, stlFile);
+        //So copying writing the struct in one go fails... so piecewise!
+        for (size_t i = 0; i < tData.size(); i++) {
+            fwrite(&tData[i]->ni, sizeof(float), 1, stlFile);
+            fwrite(&tData[i]->nj, sizeof(float), 1, stlFile);
+            fwrite(&tData[i]->nk, sizeof(float), 1, stlFile);
+
+            fwrite(&tData[i]->v1[0], sizeof(float), 1, stlFile);
+            fwrite(&tData[i]->v1[1], sizeof(float), 1, stlFile);
+            fwrite(&tData[i]->v1[2], sizeof(float), 1, stlFile);
+
+            fwrite(&tData[i]->v2[0], sizeof(float), 1, stlFile);
+            fwrite(&tData[i]->v2[1], sizeof(float), 1, stlFile);
+            fwrite(&tData[i]->v2[2], sizeof(float), 1, stlFile);
+
+            fwrite(&tData[i]->v3[0], sizeof(float), 1, stlFile);
+            fwrite(&tData[i]->v3[1], sizeof(float), 1, stlFile);
+            fwrite(&tData[i]->v3[2], sizeof(float), 1, stlFile);
+            fwrite(&tData[i]->attributeByte, sizeof(tData[i]->attributeByte), 1, stlFile);
+        }
 
     }
+    printf("Done! Closing\n");
 
     return nrWritten;
 }
