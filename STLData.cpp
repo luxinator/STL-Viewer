@@ -48,9 +48,9 @@ void binaryToTriangle(const char * buffer, triangle *t) {
 }
 
 STLData::STLData(size_t n) {
-    tData.reserve(n);
-    tDataSize = tData.capacity();
-    name = "";
+    if(n)
+        tData.reserve(n);
+    this->name = "stlData";
 }
 
 STLData::STLData(const char *filename, bool binary) {
@@ -201,6 +201,8 @@ size_t STLData::addTriangle(triangle *t) {
     return tData.size();
 }
 
+
+
 STLData::~STLData() {
 
     for (size_t i = 0; i < tData.size(); i++) {
@@ -232,7 +234,7 @@ int STLData::saveToFile(const char *filename, bool binary) {
         }
 
         printf("Writing...\n");
-        fprintf(stlFile, "solid %s\n", name.c_str());
+        fprintf(stlFile, "solid %s\n", this->name.c_str());
 
         for (size_t i = 0; i < tData.size(); i++) {
             triangle *t = tData[i];
@@ -293,3 +295,9 @@ int STLData::saveToFile(const char *filename, bool binary) {
 
     return nrWritten;
 }
+
+void STLData::addTriangles(std::vector<triangle *> a) {
+    this->tData.insert(tData.end(), a.begin(), a.end());
+}
+
+
