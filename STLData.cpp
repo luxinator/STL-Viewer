@@ -159,7 +159,7 @@ STLData::STLData(const char *filename, bool binary) {
         }
 
         if(CHAR_BIT != 8){
-            fprintf(stderr, "!!Binary File reading only works on 8-bit-wordsize  systems at the moment!!\n");
+            fprintf(stderr, "!!Binary File reading only works on 8-bit-wordsize systems at the moment!!\n");
         }
 
         char * header = new char [80];

@@ -52,10 +52,14 @@ int main(int argc, char * argv[]) {
     window_GL *Window_GL = new window_GL(1280, 720, "STLViewer");
 
     renderer * r = new renderer(0);
+    renderer * r2 = new renderer(1);
 
     r->loadTriangles(stlData->getTData());
+    stlData->translate(100.0,0,0.0);
+    r2->loadTriangles(stlData->getTData());
 
     Window_GL->registerRenderer(r);
+    Window_GL->registerRenderer(r2);
 
     Window_GL->loop();
 

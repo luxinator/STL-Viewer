@@ -47,6 +47,22 @@ public:
     const std::vector<triangle *> &getTData() const {
         return tData;
     }
+
+    void translate(float x, float y, float z){
+        for(size_t i = 0; i < tData.size(); i++){
+            tData[i]->v1[0] += x;
+            tData[i]->v1[1] += y;
+            tData[i]->v1[2] += z;
+
+            tData[i]->v2[0] += x;
+            tData[i]->v2[1] += y;
+            tData[i]->v2[2] += z;
+
+            tData[i]->v3[0] += x;
+            tData[i]->v3[1] += y;
+            tData[i]->v3[2] += z;
+        }
+    }
 };
 
 

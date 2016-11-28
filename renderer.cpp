@@ -192,6 +192,14 @@ void renderer::draw(glm::mat4 transform, float lightingColor[3], glm::vec3 light
 
 void renderer::update() {
 
+    //If any, empty new buffers
+    if(VAO){
+         glDeleteVertexArrays(1, &VAO);
+     }
+    if(VBO){
+        glDeleteBuffers(1, &VBO);
+    }
+    //And create new ones
     //Vertex Array Object
     glGenVertexArrays(1, &VAO);
     //Vertex Buffer Object:
@@ -205,14 +213,15 @@ void renderer::update() {
     glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * nrOfVertices * vertexdepth, vertices, GL_STATIC_DRAW);
 
     //Tell openGL how to read our Vertices:
-    glVertexAttribPointer(id, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid *) 0);
-    glEnableVertexAttribArray(id);
+    //location 0 in vertex shader can be read as follows:
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid *) 0);
+    glEnableVertexAttribArray(0);
 
-    glVertexAttribPointer(id + 1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid *) (3 * sizeof(GLfloat)));
-    glEnableVertexAttribArray(id + 1);
+    //location 1 in vertex shader can be read as follows:
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid *) (3 * sizeof(GLfloat)));
+    glEnableVertexAttribArray(1); 
 
     glBindVertexArray(0);
-
     printf("Renderer: Wrote %.0f kB of data to GPU\n", (float) (6 * sizeof(GLfloat) * (float) nrOfVertices) / 1000);
 
 }
@@ -271,7 +280,6 @@ void renderer::loadTriangles(std::vector<triangle *> triangles) {
     printf("y\t%f\t\t%f\n", boundingBox[2], boundingBox[3]);
     printf("z\t%f\t\t%f\n", boundingBox[4], boundingBox[5]);
     this->update();
-
 }
 
 renderer::~renderer() {

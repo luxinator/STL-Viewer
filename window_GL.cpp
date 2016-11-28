@@ -141,7 +141,7 @@ size_t window_GL::registerRenderer(renderer *r) {
     const float *box = r->getBoundingBox();
     camera->Position.x = (box[0] + box[1])/2.0f;
     camera->Position.y = (box[2] + box[3])/2.0f;
-    camera->Position.z = (box[4] + box[5])/2.0f * 1.5f;
+    camera->Position.z = (box[4] + box[5])/2.0f * 2.5f;
 
     return renderers.size();
 }
