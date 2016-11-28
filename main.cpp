@@ -12,13 +12,13 @@ const char helpText[] = "Usage: STLViewer [OPTION]..."
 "\n -i [FILE] \topen [FILE]"
 "\n -b  \t\tfor binary reading mode"
 "\n -s [FILE] \tsave the loaded file as ASCII STL"
-"\n -S [FILE] \ttsave the loaded file as Binray STL"
+"\n -S [FILE] \tsave the loaded file as Binray STL"
 "\n\n Exmaple:"
 "\n   STLViewer -i data.stl -b -s data_ascii.stl \t Stores as ASCII"
 "\n   STLViewer -i data.stl -S data_ascii.stl \t Stores as binary"
 "\n";
 
-std::string filename = "input.stl";
+std::string filename = "";
 std::string saveName = "";
 bool binary = false;
 bool save = false;
@@ -55,6 +55,11 @@ int main(int argc, char * argv[]) {
                 saveName = std::string(argv[i + 1]);
             }
         }
+    }
+
+    if(filename.length() == 0){
+        fprintf(stderr, "Please give a file to open or run with -h for help\n");
+        return 1;
     }
 
     STLData * stlData = new STLData(filename.c_str(), binary);

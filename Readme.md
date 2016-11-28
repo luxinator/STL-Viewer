@@ -6,11 +6,11 @@ A very much work in progress!
 A binary is generated as well as a lib.
 The binary is an example on how to use the lib. 
 
-### Quick Guide ### 
+### QuickGuide ###
 
 Do a out of source cmake build.
-For ASCII STL run: ` STLViewer with -i [file.stl] `
-For binary STL run: ` STLViewer with -i [file.stl] -b `
+View an ASCII STL run: ` STLViewer with -i [file.stl] `
+View a binary STL run: ` STLViewer with -i [file.stl] -b `
 
 ### Dependecies ###
 	
@@ -25,21 +25,20 @@ For binary STL run: ` STLViewer with -i [file.stl] -b `
 The executable is very plain but easy to extend. 
 The following switches can/must be used:
 	
-* -i [FILE] \topen [FILE]
-* -b  \t\tfor binary reading mode"
-* -s [FILE] \tsave the loaded file as ASCII STL
-* -S [FILE] \ttsave the loaded file as Binray STL
+* `-i [FILE]` 	open `[FILE]`
+* `-b`  		for binary reading mode"
+* `-s [FILE]` 	save the loaded file as ASCII STL
+* `-S [FILE]`	save the loaded file as Binray STL
 
 ### Exmaple ###
 
 * `STLViewer -i data.stl -b -s data_ascii.stl ` Stores as ASCII.
-
 * `STLViewer -i data.stl -S data_ascii.stl ` Stores as binary.
 
 
 The window_Gl class responds to key and mouse events. 
-pressing `p` will change to polygon view
-pressing `i` will *invert* the lighting direction.
+Pressing `p` will change to polygon view
+Pressing `i` will *invert* the lighting direction.
 The `w,a,s,d` keys will move the camera.
 The mouse wheel will move you forward and backward
 and moving with left mouse button pressed wil rotate the camera
@@ -53,3 +52,7 @@ and vice versa
 
 The Cmake file is a mess, the dependecie checks are horrible...
 Have to sit down for that one day...
+
+# License #
+All Code and material Licensed on GPL v3.0
+See `LICENSE`
