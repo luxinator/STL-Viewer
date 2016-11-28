@@ -8,6 +8,16 @@
 using namespace std;
 
 
+const char helpText[] = "Usage: STLViewer [OPTION]..."
+"\n -i [FILE] \topen [FILE]"
+"\n -b  \t\tfor binary reading mode"
+"\n -s [FILE] \tsave the loaded file as ASCII STL"
+"\n -S [FILE] \ttsave the loaded file as Binray STL"
+"\n\n Exmaple:"
+"\n   STLViewer -i data.stl -b -s data_ascii.stl \t Stores as ASCII"
+"\n   STLViewer -i data.stl -S data_ascii.stl \t Stores as binary"
+"\n";
+
 std::string filename = "input.stl";
 std::string saveName = "";
 bool binary = false;
@@ -16,7 +26,7 @@ bool saveBin = false;
 
 
 void display_usage(){
-    printf("PLACEHOLDERTEXT\n");
+    printf("%s\n", helpText);
 }
 
 int main(int argc, char * argv[]) {
@@ -52,14 +62,11 @@ int main(int argc, char * argv[]) {
     window_GL *Window_GL = new window_GL(1280, 720, "STLViewer");
 
     renderer * r = new renderer(0);
-    renderer * r2 = new renderer(1);
 
     r->loadTriangles(stlData->getTData());
     stlData->translate(100.0,0,0.0);
-    r2->loadTriangles(stlData->getTData());
 
     Window_GL->registerRenderer(r);
-    Window_GL->registerRenderer(r2);
 
     Window_GL->loop();
 

@@ -30,6 +30,16 @@ The following switches can/must be used:
 	* ` -s [FILE] ` to save the loaded file as ASCII STL
 	* ` -S [FILE ` to save the loaded file as Binray STL
 
+
+The window_Gl class responds to key and mouse events. 
+pressing `p` will change to polygon view
+pressing `i` will *invert* the lighting direction.
+The `w,a,s,d` keys will move the camera.
+The mouse wheel will move you forward and backward
+and moving with left mouse button pressed wil rotate the camera
+pressing the right button and moving will strafe.
+
+
 It is possible to use the program as a ASCII to binary convert
 and vice versa
 
