@@ -25,10 +25,15 @@ For binary STL run: ` STLViewer with -i [file.stl] -b `
 The executable is very plain but easy to extend. 
 The following switches can/must be used:
 	
-	* ` -i [FILE] ` to specify which file to open
-	* ` -b ` to specify for binary reading mode
-	* ` -s [FILE] ` to save the loaded file as ASCII STL
-	* ` -S [FILE ` to save the loaded file as Binray STL
+	* -i [FILE] \topen [FILE]
+	* -b  \t\tfor binary reading mode"
+	* -s [FILE] \tsave the loaded file as ASCII STL
+	* -S [FILE] \ttsave the loaded file as Binray STL
+
+### Exmaple ###
+
+`STLViewer -i data.stl -b -s data_ascii.stl ` Stores as ASCII
+`STLViewer -i data.stl -S data_ascii.stl ` Stores as binary
 
 
 The window_Gl class responds to key and mouse events. 
