@@ -29,6 +29,7 @@ The following switches can/must be used:
 * `-b`  		for binary reading mode
 * `-s [FILE]` 	save the loaded file as ASCII STL
 * `-S [FILE]`	save the loaded file as Binray STL
+* `-fe [FILE]`  save the loaded file as evolver fe file
 
 ### Exmaple ###
 
