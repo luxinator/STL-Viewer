@@ -26,7 +26,7 @@ The executable is very plain but easy to extend.
 The following switches can/must be used:
 	
 * `-i [FILE]` 	open `[FILE]`
-* `-b`  		for binary reading mode"
+* `-b`  		for binary reading mode
 * `-s [FILE]` 	save the loaded file as ASCII STL
 * `-S [FILE]`	save the loaded file as Binray STL
 

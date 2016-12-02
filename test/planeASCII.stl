@@ -1,16 +1,17 @@
 solid Exported from Blender-2.77 (sub 0)
 facet normal 0.000000 0.000000 1.000000
-outer loop
-vertex -0.309455 -0.948581 0.339891
-vertex 1.690545 -0.948581 0.339891
-vertex 1.690545 1.051419 0.339891
-endloop
+  outer loop
+	vertex -0.309455 -0.948581 0.339891
+	vertex 1.690545 -0.948581 0.339891
+	vertex 1.690545 1.051419 0.339891
+  endloop
 endfacet
+
 facet normal 0.000000 0.000000 1.000000
-outer loop
-vertex 1.690545 1.051419 0.339891
-vertex -0.309455 1.051419 0.339891
-vertex -0.309455 -0.948581 0.339891
-endloop
+	outer loop
+		vertex 1.690545 1.051419 0.339891
+		vertex -0.309455 1.051419 0.339891
+		vertex -0.309455 -0.948581 0.339891
+	endloop
 endfacet
 endsolid Exported from Blender-2.77 (sub 0)
