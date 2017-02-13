@@ -229,7 +229,7 @@ void STLData::printInfo() {
  *  ID (face_id face_id ...)^M
  */
 int STLData::saveToEvolver(const char *filename, const char *options,
-                           const size_t id) {
+                           const size_t id, const size_t start_id) {
 
   printf("Opening File %s\n", filename);
   std::FILE *feFile = fopen(filename, "wb");
@@ -247,38 +247,40 @@ int STLData::saveToEvolver(const char *filename, const char *options,
   printf("Writing vertices\n");
   for (size_t i = 0; i < tData.size(); i++) {
     triangle *t = tData[i];
-    fprintf(feFile, "%zu\t%f\t%f\t%f\t%s\n", i * 3 + 1, t->v1[0], t->v1[1], t->v1[2],
-            options);
-    fprintf(feFile, "%zu\t%f\t%f\t%f\t%s\n", i * 3 + 2, t->v2[0], t->v2[1],
-            t->v2[2], options);
-    fprintf(feFile, "%zu\t%f\t%f\t%f\t%s\n", i * 3 + 3, t->v3[0], t->v3[1],
-            t->v3[2], options);
+    size_t id = start_id + i * 3;
+    fprintf(feFile, "%zu\t%f\t%f\t%f\t\n", id + 1, t->v1[0], t->v1[1], t->v1[2]);
+    fprintf(feFile, "%zu\t%f\t%f\t%f\t\n", id + 2, t->v2[0], t->v2[1],
+            t->v2[2]);
+    fprintf(feFile, "%zu\t%f\t%f\t%f\t\n", id + 3, t->v3[0], t->v3[1],
+            t->v3[2]);
   }
 
   fprintf(feFile, "\nedges\n");
   printf("Writing edges\n");
   for (size_t i = 0; i < tData.size(); i++) {
-    fprintf(feFile, "%zu\t%zu\t%zu\t%s\n", i * 3 + 1, i * 3 + 1, i * 3 + 2,
+    size_t id = start_id + i * 3;
+    fprintf(feFile, "%zu\t%zu\t%zu\t%s\n", id + 1, id + 1, id + 2,
             options);
-    fprintf(feFile, "%zu\t%zu\t%zu\t%s\n", i * 3 + 2, i * 3 + 2, i * 3 + 3,
+    fprintf(feFile, "%zu\t%zu\t%zu\t%s\n", id + 2, id + 2, id + 3,
             options);
-    fprintf(feFile, "%zu\t%zu\t%zu\t%s\n", i * 3 + 3, i * 3 + 3, i * 3 + 1,
+    fprintf(feFile, "%zu\t%zu\t%zu\t%s\n", id + 3, id + 3, id + 1,
             options);
   }
 
   fprintf(feFile, "\nfaces\n");
   printf("Writing faces\n");
   for (size_t i = 0; i < tData.size(); i++) {
-    fprintf(feFile, "%zu\t%zu\t%zu\t%zu\t%s\n", i + 1, i * 3 + 1, i * 3 + 2,
-           i * 3 + 3, options);
+    size_t id = start_id + i;
+    fprintf(feFile, "%zu\t%zu\t%zu\t%zu\tno_refine %s\n", id + 1, start_id + i * 3 + 1, start_id + i * 3 + 2,
+           start_id + i * 3 + 3, options);
   }
 
   // We Assum our STL is one body... if possible...
   fprintf(feFile, "\nbodies\n");
   printf("Writing bodies\n");
-  fprintf(feFile, "%zu\t", id);
+  fprintf(feFile, "%zu\t", start_id);
   for (size_t i = 0; i < tData.size(); i++) {
-    fprintf(feFile, "%zu ", i + 1);
+    fprintf(feFile, "%zu ", start_id + i + 1);
   }
   //fprintf(feFile, "%s\n", options);
 

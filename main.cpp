@@ -66,7 +66,7 @@ int main(int argc, char *argv[]) {
   renderer *r = new renderer(0);
 
   r->loadTriangles(stlData->getTData());
-  stlData->translate(100.0, 0, 0.0);
+  // stlData->translate(0.0, 0, 0.0);
 
   Window_GL->registerRenderer(r);
 
@@ -77,8 +77,7 @@ int main(int argc, char *argv[]) {
   if (save) {
     stlData->saveToFile(saveName.c_str(), saveBin);
   } if (save_fe){
-    stlData->saveToEvolver(saveName.c_str());
-  }
+    stlData->saveToEvolver(saveName.c_str(), "no_refine fixed");  }
 
   delete stlData;
 }

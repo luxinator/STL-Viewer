@@ -33,8 +33,8 @@ public:
 
     int saveToFile(const char *filename, bool binary);
 
-    int saveToEvolver(const char *filename, const char *options = "fixed", const size_t id = 1);
-
+    int saveToEvolver(const char *filename, const char *options = "fixed",
+                           const size_t id = 1, const size_t start_id = 100);
     void printInfo();
 
 
